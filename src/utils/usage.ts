@@ -798,7 +798,11 @@ export function saveModelPrices(prices: Record<string, ModelPrice>): void {
 /**
  * 获取 API 统计数据
  */
-export function getApiStats(usageData: unknown, modelPrices: Record<string, ModelPrice>): ApiStats[] {
+export function getApiStats(
+  usageData: unknown,
+  modelPrices: Record<string, ModelPrice>,
+  maskSensitive: boolean = true
+): ApiStats[] {
   const apis = getApisRecord(usageData);
   if (!apis) return [];
   const result: ApiStats[] = [];
@@ -865,7 +869,7 @@ export function getApiStats(usageData: unknown, modelPrices: Record<string, Mode
       : derivedFailureCount;
 
     result.push({
-      endpoint: maskUsageSensitiveValue(endpoint) || endpoint,
+      endpoint: (maskSensitive ? maskUsageSensitiveValue(endpoint) : endpoint) || endpoint,
       totalRequests: Number(apiData.total_requests) || 0,
       successCount,
       failureCount,

@@ -953,6 +953,8 @@
     "requests_trend": "Request Trends",
     "tokens_trend": "Token Usage Trends",
     "api_details": "API Details",
+    "show_full_api_keys": "Show Full Key",
+    "show_masked_api_keys": "Show Masked Key",
     "by_hour": "By Hour",
     "by_day": "By Day",
     "range_filter": "Time Range",

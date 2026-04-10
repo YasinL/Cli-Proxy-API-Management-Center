@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
 import { formatCompactNumber, formatUsd, type ApiStats } from '@/utils/usage';
 import styles from '@/pages/UsagePage.module.scss';
 
@@ -8,12 +9,20 @@ export interface ApiDetailsCardProps {
   apiStats: ApiStats[];
   loading: boolean;
   hasPrices: boolean;
+  showFullApiKeys: boolean;
+  onToggleShowFullApiKeys: () => void;
 }
 
 type ApiSortKey = 'endpoint' | 'requests' | 'tokens' | 'cost';
 type SortDir = 'asc' | 'desc';
 
-export function ApiDetailsCard({ apiStats, loading, hasPrices }: ApiDetailsCardProps) {
+export function ApiDetailsCard({
+  apiStats,
+  loading,
+  hasPrices,
+  showFullApiKeys,
+  onToggleShowFullApiKeys,
+}: ApiDetailsCardProps) {
   const { t } = useTranslation();
   const [expandedApis, setExpandedApis] = useState<Set<string>>(new Set());
   const [sortKey, setSortKey] = useState<ApiSortKey>('requests');
@@ -59,7 +68,25 @@ export function ApiDetailsCard({ apiStats, loading, hasPrices }: ApiDetailsCardP
     sortKey === key ? (sortDir === 'asc' ? ' ▲' : ' ▼') : '';
 
   return (
-    <Card title={t('usage_stats.api_details')} className={styles.detailsFixedCard}>
+    <Card
+      title={t('usage_stats.api_details')}
+      extra={
+        !loading && sorted.length > 0 ? (
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            aria-pressed={showFullApiKeys}
+            onClick={onToggleShowFullApiKeys}
+          >
+            {showFullApiKeys
+              ? t('usage_stats.show_masked_api_keys')
+              : t('usage_stats.show_full_api_keys')}
+          </Button>
+        ) : undefined
+      }
+      className={styles.detailsFixedCard}
+    >
       {loading ? (
         <div className={styles.hint}>{t('common.loading')}</div>
       ) : sorted.length > 0 ? (

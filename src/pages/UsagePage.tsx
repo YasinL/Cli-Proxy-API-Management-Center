@@ -144,6 +144,7 @@ export function UsagePage() {
   // Chart lines state
   const [chartLines, setChartLines] = useState<string[]>(loadChartLines);
   const [timeRange, setTimeRange] = useState<UsageTimeRange>(loadTimeRange);
+  const [showFullApiKeys, setShowFullApiKeys] = useState(false);
 
   const timeRangeOptions = useMemo(
     () =>
@@ -213,8 +214,8 @@ export function UsagePage() {
   // Derived data
   const modelNames = useMemo(() => getModelNamesFromUsage(usage), [usage]);
   const apiStats = useMemo(
-    () => getApiStats(filteredUsage, modelPrices),
-    [filteredUsage, modelPrices]
+    () => getApiStats(filteredUsage, modelPrices, !showFullApiKeys),
+    [filteredUsage, modelPrices, showFullApiKeys]
   );
   const modelStats = useMemo(
     () => getModelStats(filteredUsage, modelPrices),
@@ -361,7 +362,13 @@ export function UsagePage() {
 
       {/* Details Grid */}
       <div className={styles.detailsGrid}>
-        <ApiDetailsCard apiStats={apiStats} loading={loading} hasPrices={hasPrices} />
+        <ApiDetailsCard
+          apiStats={apiStats}
+          loading={loading}
+          hasPrices={hasPrices}
+          showFullApiKeys={showFullApiKeys}
+          onToggleShowFullApiKeys={() => setShowFullApiKeys((prev) => !prev)}
+        />
         <ModelStatsCard modelStats={modelStats} loading={loading} hasPrices={hasPrices} />
       </div>
 
